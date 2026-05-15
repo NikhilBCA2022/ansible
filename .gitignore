@@ -1,0 +1,6 @@
+*.pem
+*.key
+.env
+.cache/
+.ansible/
+__pycache__/
