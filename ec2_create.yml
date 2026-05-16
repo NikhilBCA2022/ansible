@@ -1,0 +1,38 @@
+---
+- name: Create EC2 instances and S3 bucket
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  
+  tasks:
+    - name: Create EC2 instances
+      amazon.aws.ec2_instance:
+        name: "{{ item.name }}"
+        instance_type: t3.micro
+        image_id: "{{ item.image }}"  
+        region: us-east-1
+        aws_access_key: "{{ec2_access_key}}"
+        aws_secret_key: "{{ec2_secret_key}}"
+        security_group: default
+        key_name: ansible_key
+        state: running
+      loop:
+        - { image: "ami-091138d0f0d41ff90", name: "managed-node-1"}  ##ubuntu
+        - { image: "ami-0236922087fa98b6e", name: "managed-node-2"}  ##amazon linux
+        - { image: "ami-0236922087fa98b6e", name: "managed-node-3"}  ##amazon linux
+      register: ec2_instances
+
+    - name: Create S3 bucket
+      amazon.aws.s3_bucket:
+        name: my-unique-bucket-name-nikhils3bucket
+        region: us-east-1
+        aws_access_key: "{{ec2_access_key}}"
+        aws_secret_key: "{{ec2_secret_key}}"
+        state: present
+      register: s3_bucket
+
+    - name: Display resource information
+      debug:
+        msg:
+          - "Created {{ ec2_instances.results | length }} EC2 instances"
+          - "S3 Bucket Name: {{ s3_bucket.name }}"

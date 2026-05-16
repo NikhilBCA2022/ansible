@@ -1,0 +1,44 @@
+# Ansible vault password
+vault.pass
+
+# Private keys
+*.pem
+*.key
+
+# SSH keys
+id_rsa
+id_rsa.pub
+id_ed25519
+id_ed25519.pub
+
+# Ansible retry files
+*.retry
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Virtual environments
+venv/
+.env/
+
+# VS Code
+.vscode/
+
+# Terraform (if later used)
+.terraform/
+*.tfstate
+*.tfstate.backup
+
+# Logs
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Ansible inventory with IPs/secrets (optional)
+inventory.ini
+
+# Vault encrypted secrets backup
+group_vars/all/pass.yml.bak

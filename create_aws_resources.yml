@@ -1,0 +1,46 @@
+---
+- name: Create EC2 instances and S3 bucket
+  hosts: localhost
+  connection: local
+  gather_facts: true
+  
+  tasks:
+    - name: Create Amazon Linux EC2 instance
+      amazon.aws.ec2_instance:
+        name: amazon-linux-instance
+        instance_type: t2.micro
+        image_id: ami-0c55b159cbfafe1f0  # Amazon Linux 2 AMI (update for your region)
+        region: us-east-1
+        key_name: your-key-name
+        security_group: default
+        state: running
+        tags:
+          OS: AmazonLinux
+      register: amazon_linux_instance
+
+    - name: Create Ubuntu EC2 instance
+      amazon.aws.ec2_instance:
+        name: ubuntu-instance
+        instance_type: t2.micro
+        image_id: ami-0557a15b87f6559cf  # Ubuntu 22.04 LTS AMI (update for your region)
+        region: us-east-1
+        key_name: your-key-name
+        security_group: default
+        state: running
+        tags:
+          OS: Ubuntu
+      register: ubuntu_instance
+
+    - name: Create S3 bucket
+      amazon.aws.s3_bucket:
+        name: my-unique-bucket-name-{{ ansible_date_time.epoch }}
+        region: us-east-1
+        state: present
+      register: s3_bucket
+
+    - name: Display instance information
+      debug:
+        msg:
+          - "Amazon Linux Instance ID: {{ amazon_linux_instance.instance_ids[0] }}"
+          - "Ubuntu Instance ID: {{ ubuntu_instance.instance_ids[0] }}"
+          - "S3 Bucket Name: {{ s3_bucket.name }}"
