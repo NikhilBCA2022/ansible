@@ -1,0 +1,3 @@
+---
+# vars file for ec2_create
+type: t3.micro
